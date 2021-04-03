@@ -14,7 +14,16 @@ describe('', () => {
     file = await FileService.create({keyName: 'first-test.txt'});
     });
 
-    
+    it('GET it should get all files from the files database', async () => {
+        const res = await request(app)
+        .get('/api/v1/files');
+
+    expect(res.body).toEqual([{
+        "id": "1",
+        "fileName": "https://04-review.s3-us-west-2.amazonaws.com/first-test.txt"
+    }])
+    })
+
     it('POST creates a new file in files database and uploads it to aws', async () => {
         const res = await request(app)
         .post('/api/v1/files')
