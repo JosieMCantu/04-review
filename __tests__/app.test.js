@@ -5,6 +5,18 @@ const app = require('../lib/app');
 const File = require('../lib/models/File');
 const FileService = require('../lib/services/FileService');
 
+jest.mock('multer', () => {
+  const multer = () => ({single(){
+      return (req, res, next) => {
+          req.file = {originalname: 'first-test.txt'}
+          next()
+      }
+  }})
+  multer.memoryStorage = () =>{}
+  return multer
+})
+
+
 describe('04-review routes', () => {
 
   beforeEach(() => {

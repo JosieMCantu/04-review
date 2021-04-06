@@ -5,6 +5,17 @@ const app = require('../lib/app');
 const File = require('../lib/models/File');
 const FileService = require('../lib/services/FileService');
 
+jest.mock('multer', () => {
+    const multer = () => ({single(){
+        return (req, res, next) => {
+            req.file = {originalname: 'first-test.txt'}
+            next()
+        }
+    }})
+    multer.memoryStorage = () =>{}
+    return multer
+})
+// what we're mocking is the middleware that express is expecting for the test.
 describe('', () => {
     beforeEach(() => {
     return setup(pool);
@@ -25,6 +36,8 @@ describe('', () => {
     })
 
     it('POST creates a new file in files database and uploads it to aws', async () => {
+        //when multer is invoked we are returning an object when we return single as a function
+        
         const res = await request(app)
         .post('/api/v1/files')
         .send({keyName: 'first-test.txt'});
